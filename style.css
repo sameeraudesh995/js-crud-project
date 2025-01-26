@@ -361,4 +361,45 @@ main {
     margin-top: 1.3rem;
   }
 
+  /*==================== recent order======================== */
 
+  main .recent-order{
+    margin-top: 2rem;
+  }
+
+  main .recent-order h2{
+    margin-bottom: 0.8rem;
+  }
+
+  main .recent-order table{
+    background: var(--color-white);
+    width: 100%;
+    border-radius: var(--card-border-radius);
+    padding: var(--card-padding);
+    text-align: center;
+    box-shadow: var(--box-shadow);
+    transition: all 300ms ease;
+  }
+
+  main .recent-order table:hover{
+    box-shadow: none;
+  }
+
+
+  main table tbody td{
+    height: 2.8rem;
+    border-bottom: 1px solid var(--color-light);
+   color: var(--color-dark-variant);
+
+  }
+
+  main table tbody tr:last-child {
+    border: none;
+  }
+
+  main .recent-order a{
+    text-align: center;
+    display: block;
+    margin: 1rem auto;
+    color: var(--color-primary);
+  }
