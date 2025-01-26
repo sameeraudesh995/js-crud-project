@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload and Display Image as Circle</title>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+    th, td {
+      padding: 10px;
+      text-align: center;
+    }
+    img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover; /* Ensure the image is cropped if needed */
+      border-radius: 50%; /* Make the image circular */
+    }
+  </style>
+</head>
+<body>
+  <h2>Upload Image and Display in Table (Circular)</h2>
+  <form id="uploadForm">
+    <input type="file" id="imageInput" accept="image/*">
+    <button type="button" id="uploadBtn">Upload</button>
+  </form>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Image</th>
+      </tr>
+    </thead>
+    <tbody id="imageTableBody">
+      <!-- Images will be added here dynamically -->
+    </tbody>
+  </table>
+
+  <script>
+    const imageInput = document.getElementById('imageInput');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const imageTableBody = document.getElementById('imageTableBody');
+
+    uploadBtn.addEventListener('click', () => {
+      const file = imageInput.files[0];
+
+      if (file) {
+        // Create a FileReader to read the image
+        const reader = new FileReader();
+
+        reader.onload = function(event) {
+          // Get the image URL
+          const imageURL = event.target.result;
+
+          // Create a new row for the table
+          const newRow = document.createElement('tr');
+
+          // Add the row number and image to the row
+          newRow.innerHTML = `
+            <td>${imageTableBody.rows.length + 1}</td>
+            <td><img src="${imageURL}" alt="Uploaded Image"></td>
+          `;
+
+          // Append the new row to the table body
+          imageTableBody.appendChild(newRow);
+        };
+
+        // Read the image file as a Data URL
+        reader.readAsDataURL(file);
+      } else {
+        alert('Please select an image to upload!');
+      }
+    });
+  </script>
+</body>
+</html>
