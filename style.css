@@ -454,7 +454,7 @@ main {
     text-align: right;
   }
 
-  
+
   /* ============== RECENT UPDATES ============== */
 .right .recent-updates {
     margin-top: 1rem;
@@ -481,5 +481,4 @@ main {
     grid-template-columns: 2.6rem auto;
     gap: 1rem;
     margin-bottom: 1rem;
-    margin-bottom: 14px;
   }
