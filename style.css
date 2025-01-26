@@ -156,11 +156,15 @@ aside .top{
 aside .logo{
     display: flex;
     gap: 0.8rem;
+    
 }
 
 aside .logo img{
-    width: 2rem;
-    height: 2rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    
+    border: 3px solid var(--color-danger);
+    border-radius: 50%;
 }
 
 aside .close{
