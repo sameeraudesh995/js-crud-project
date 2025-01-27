@@ -51,8 +51,10 @@ let address =
     document.getElementById('address');
 let contact =
     document.getElementById('contact');
-let dob =
-    document.getElementById('datepicker');
+let email =
+    document.getElementById('email');
+let image =
+    document.getElementById('file');
 
 
 const displayAlert = () => {
@@ -75,68 +77,83 @@ const pushCustomer = async (customer) => {
 const clearFields = () => {
     name.value = '';
     address.value = '';
-    salary.value = '';
-    dob.value = '';
+    contact.value = '';
+    email.value = '';
+    image.value= '';
 }
 const loadTable = () => {
-    let tableBody =
-        document.getElementById('table-body');
+    let tableBody = document.getElementById('table-body');
 
-    tableBody.innerHTML='';
+    tableBody.innerHTML = ''; // Clear the table body
 
-    for (const temp of customerDatabase) {
-        let tr =
-            document.createElement('tr');
+    for (const customer of customerDatabase) {
+        let tr = document.createElement('tr');
 
-        tr.innerHTML=`
+        tr.innerHTML = `
             <td>
-                            <div class="t-outer">
-                                ${temp.getCustomerId()}
-                            </div>
-                        </td>
-                        <td>
-                            <div class="t-outer">
-                                 ${temp.getCustomerName()}
-                            </div>
-                        </td>
-                        <td>
-                            <div class="t-outer">
-                                 ${temp.getCustomerAddress()}
-                            </div>
-                        </td>
-                        <td>
-                            <div class="t-outer">
-                                 ${temp.getCustomerSalary()}
-                            </div>
-                        </td>
-                        <td>
-                            <div class="t-outer">
-                                 ${temp.getCustomerDob()}
-                            </div>
-                        </td>
-                        <td>
-                            <div class="t-outer">
-                                <input type="button" onclick="readyToUpdate('${temp.getCustomerId()}')" value="Modify" class="btn btn-success">
-                            </div>
-                        </td>
-                        <td>
-                            <div class="t-outer">
-                                <input type="button" onclick="deleteCustomer('${temp.getCustomerId()}')"" class="btn btn-danger" value="Remove">
-                            </div>
-                        </td>
+                <div class="t-outer">
+                    ${customer.getCustomerId()}
+                </div>
+            </td>
+            <td>
+                <div class="t-outer">
+                    ${customer.getCustomerName()}
+                </div>
+            </td>
+            <td>
+                <div class="t-outer">
+                    ${customer.getCustomerAddress()}
+                </div>
+            </td>
+            <td>
+                <div class="t-outer">
+                    ${customer.getCustomerContact()}
+                </div>
+            </td>
+            <td>
+                <div class="t-outer">
+                    ${customer.getCustomerEmail()}
+                </div>
+            </td>
+            <td>
+                <div class="t-outer">
+                    <img src="${customer.getCustomerImage()}" alt="Uploaded Image" id="image-preview" class="img-circle">
+                </div>
+            </td>
+            <td>
+                <div class="t-outer">
+                    <input type="button" onclick="readyToUpdate('${customer.getCustomerId()}')" value="Modify" class="btn btn-success">
+                </div>
+            </td>
+            <td>
+                <div class="t-outer">
+                    <input type="button" onclick="deleteCustomer('${customer.getCustomerId()}')" class="btn btn-danger" value="Remove">
+                </div>
+            </td>
         `;
         tableBody.appendChild(tr);
     }
-}
-const setData=(data)=>{
-    id=data.getCustomerId();
-    name.value=data.getCustomerName();
-    address.value=data.getCustomerAddress();
-    salary.value=data.getCustomerSalary();
-    dob.value=data.getCustomerDob();
-    document.getElementById('btnSaveUpdate')
-        .innerHTML='Update Customer';
-}
+};
+
+
+// Set data into form inputs
+const setData = (data) => {
+    id = data.getCustomerId(); // Store the customer ID for updating
+    name.value = data.getCustomerName();
+    address.value = data.getCustomerAddress();
+    contact.value = data.getCustomerContact();
+    email.value = data.getCustomerEmail();
+
+   
+    const imagePreview = document.getElementById('image-preview'); 
+    imagePreview.src = data.getCustomerImage(); 
+    imagePreview.style.display = 'block'; 
+
+  
+    document.getElementById('btnSaveUpdate').innerHTML = 'Update Customer';
+};
+
+
 const readyToUpdate = (customerId)=>{
     let selectedCustomer = customerDatabase.find((e)=>e.getCustomerId()==customerId);
     if(!selectedCustomer){
@@ -146,6 +163,7 @@ const readyToUpdate = (customerId)=>{
     setData(selectedCustomer);
 
 }
+
 
 const deleteCustomer = (customerId)=>{
     if(confirm('Are you sure whether do you want to delete this customer?')){
@@ -182,40 +200,60 @@ function generateCustomerId() {
 }
 
 const createUpdateCustomer = () => {
-    if (
-        document.getElementById('btnSaveUpdate')
-            .innerHTML.includes('Save Customer')
-    ) {
+    const fileInput = document.getElementById('file'); 
+    const file = fileInput.files && fileInput.files[0]; 
 
-        let customer = new Customer(
-            generateCustomerId(),
-            name.value,
-            address.value,
-            parseInt(salary.value),
-            dob.value
-        );
-        pushCustomer(customer);
-    } else if (
-        document.getElementById('btnSaveUpdate')
-            .innerHTML.includes('Update Customer')
-        && id
-    ) {
-        let selectedIndex =
-            customerDatabase.findIndex((selectedData)=>selectedData
-            .getCustomerId()==id);
-        if(selectedIndex!=-1){
-            customerDatabase[selectedIndex] = new Customer(
-                id,
-                name.value,address.value,
-                Number.parseInt(salary.value),
-                dob.value
-            );
-            clearFields();
-            loadTable();
-            document.getElementById('btnSaveUpdate')
-                .innerHTML='Save Customer';
-        }
+    if (!file) {
+        alert('Please upload an image file.');
+        return;
     }
 
+    const reader = new FileReader(); 
 
-}
+    reader.onload = (event) => {
+        const imageURL = event.target.result; 
+
+        if (
+            document.getElementById('btnSaveUpdate')
+                .innerHTML.includes('Save Customer')
+        ) {
+            // Save operation
+            let customer = new Customer(
+                generateCustomerId(),
+                name.value,
+                address.value,
+                contact.value,
+                email.value,
+                imageURL 
+            );
+            pushCustomer(customer);
+            clearFields();
+            loadTable();
+        } else if (
+            document.getElementById('btnSaveUpdate')
+                .innerHTML.includes('Update Customer')
+            && id
+        ) {
+            // Update operation
+            let selectedIndex =
+                customerDatabase.findIndex((selectedData) => selectedData
+                    .getCustomerId() == id);
+            if (selectedIndex != -1) {
+                customerDatabase[selectedIndex] = new Customer(
+                    id,
+                    name.value,
+                    address.value,
+                    contact.value,
+                    email.value,
+                    imageURL 
+                );
+                clearFields();
+                loadTable();
+                document.getElementById('btnSaveUpdate')
+                    .innerHTML = 'Save Customer';
+            }
+        }
+    };
+
+    reader.readAsDataURL(file); 
+};
